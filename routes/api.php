@@ -40,6 +40,7 @@ Route::group([
 ], function ($router) {
 
     Route::get('units', 'App\Http\Controllers\UnitController@units');
+    Route::get('get_country', 'App\Http\Controllers\CountryController@get_country');
 
     Route::get('groups', 'App\Http\Controllers\GroupController@groups');
     Route::post('create_group', 'App\Http\Controllers\GroupController@create_group');
@@ -70,4 +71,29 @@ Route::group([
     Route::delete('delete_customer/{id}', 'App\Http\Controllers\CustomerController@delete_customer');
 
     Route::get('find_inventory/{date}', 'App\Http\Controllers\InventoryController@find_inventory');
+
+    Route::get('services_type', 'App\Http\Controllers\ServicesTypeController@services_type');
+    Route::post('add_services_type', 'App\Http\Controllers\ServicesTypeController@add_services_type');
+    
+    Route::get('services', 'App\Http\Controllers\ServicesController@services');
+    Route::post('add_services', 'App\Http\Controllers\ServicesController@add_services');
+
+    Route::post('add_sub_services', 'App\Http\Controllers\SubServicesController@add_sub_services');
+    
+    Route::get('estimates', 'App\Http\Controllers\EstimateController@estimates');
+    Route::post('add_estimate', 'App\Http\Controllers\EstimateController@add_estimate');
+    Route::post('add_estimate_save_send', 'App\Http\Controllers\EstimateController@add_estimate_save_send');
+    
+
+    Route::get('find_property/{id}', 'App\Http\Controllers\PropertyController@find_property');
+    Route::post('add_property', 'App\Http\Controllers\PropertyController@add_property');
+
+    Route::get('vehicles', 'App\Http\Controllers\VehicleController@vehicles');
+    Route::post('add_vehicle', 'App\Http\Controllers\VehicleController@add_vehicle');
+
+    Route::get('insurance', 'App\Http\Controllers\InsuranceController@insurance');
+    Route::post('add_insurance', 'App\Http\Controllers\InsuranceController@add_insurance');
+
+    Route::get('get_customer_profile/{id}', 'App\Http\Controllers\CustomerController@get_customer_profile');
+    
 });
