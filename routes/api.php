@@ -47,10 +47,10 @@ Route::group([
     Route::put('update_group', 'App\Http\Controllers\GroupController@update_group');
     Route::delete('delete_group/{id}', 'App\Http\Controllers\GroupController@delete_group');
     
-    Route::get('items', 'App\Http\Controllers\ItemController@items');
-    Route::post('create_item', 'App\Http\Controllers\ItemController@create_item');
-    Route::put('update_item', 'App\Http\Controllers\ItemController@update_item');
-    Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
+    // Route::get('items', 'App\Http\Controllers\ItemController@items');
+    // Route::post('create_item', 'App\Http\Controllers\ItemController@create_item');
+    // Route::put('update_item', 'App\Http\Controllers\ItemController@update_item');
+    // Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
 
     Route::post('import_item', 'App\Http\Controllers\ImportController@import_item');
     
@@ -75,15 +75,24 @@ Route::group([
     Route::get('services_type', 'App\Http\Controllers\ServicesTypeController@services_type');
     Route::post('add_services_type', 'App\Http\Controllers\ServicesTypeController@add_services_type');
     
+    
+
     Route::get('services', 'App\Http\Controllers\ServicesController@services');
     Route::post('add_services', 'App\Http\Controllers\ServicesController@add_services');
+    Route::get('find_services/{id}', 'App\Http\Controllers\ServicesController@find_services');
 
     Route::post('add_sub_services', 'App\Http\Controllers\SubServicesController@add_sub_services');
     
     Route::get('estimates', 'App\Http\Controllers\EstimateController@estimates');
     Route::post('add_estimate', 'App\Http\Controllers\EstimateController@add_estimate');
+    Route::post('update_estimate', 'App\Http\Controllers\EstimateController@update_estimate');
+    Route::post('convert_estimate', 'App\Http\Controllers\EstimateController@convert_estimate');
+    Route::delete('delete_estimate/{id}', 'App\Http\Controllers\EstimateController@delete_estimate');
     Route::post('add_estimate_save_send', 'App\Http\Controllers\EstimateController@add_estimate_save_send');
-    
+    Route::post('update_status_estimate', 'App\Http\Controllers\EstimateController@update_status_estimate');
+    Route::get('find_estimates/{id}', 'App\Http\Controllers\EstimateController@find_estimates');
+    Route::get('find_sub_services/{id}', 'App\Http\Controllers\EstimateController@find_sub_services');
+    Route::get('sub_services/{id}', 'App\Http\Controllers\EstimateController@sub_services');
 
     Route::get('find_property/{id}', 'App\Http\Controllers\PropertyController@find_property');
     Route::post('add_property', 'App\Http\Controllers\PropertyController@add_property');
@@ -93,7 +102,13 @@ Route::group([
 
     Route::get('insurance', 'App\Http\Controllers\InsuranceController@insurance');
     Route::post('add_insurance', 'App\Http\Controllers\InsuranceController@add_insurance');
+    Route::delete('delete_insurance/{id}', 'App\Http\Controllers\InsuranceController@delete_insurance');
+    
+    Route::get('supplier', 'App\Http\Controllers\SupplierController@supplier');
+    Route::post('add_supplier', 'App\Http\Controllers\SupplierController@add_supplier');
+    Route::delete('delete_supplier/{id}', 'App\Http\Controllers\SupplierController@delete_supplier');
 
     Route::get('get_customer_profile/{id}', 'App\Http\Controllers\CustomerController@get_customer_profile');
-    
+
+    Route::get('document_download/{file_name}', 'App\Http\Controllers\DocumentController@document_download');
 });

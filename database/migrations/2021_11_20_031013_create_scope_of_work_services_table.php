@@ -17,8 +17,8 @@ class CreateScopeOfWorkServicesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('estimate_id');
             $table->unsignedBigInteger('services_id');
-            $table->integer('labor')->default(0);
-            $table->integer('parts')->default(0);
+            $table->integer('labor_fee')->default(0);
+            $table->integer('parts_fee')->default(0);
             $table->timestamps();
         });
     }
@@ -32,4 +32,6 @@ class CreateScopeOfWorkServicesTable extends Migration
     {
         Schema::dropIfExists('scope_of_work_services');
     }
+
+    
 }

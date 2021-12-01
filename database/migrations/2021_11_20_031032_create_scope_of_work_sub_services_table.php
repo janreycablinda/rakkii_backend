@@ -16,9 +16,10 @@ class CreateScopeOfWorkSubServicesTable extends Migration
         Schema::create('scope_of_work_sub_services', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('scope_of_work_services_id');
+            $table->foreign('scope_of_work_services_id')->references('id')->on('scope_of_work_services')->cascadeOnDelete();
             $table->unsignedBigInteger('sub_services_id');
-            $table->integer('labor')->default(0);
-            $table->integer('parts')->default(0);
+            $table->integer('labor_fee')->default(0);
+            $table->integer('parts_fee')->default(0);
             $table->timestamps();
         });
     }

@@ -23,4 +23,11 @@ class ServicesController extends Controller
 
         return response()->json($new->load('services_type', 'sub_services'));
     }
+
+    public function find_services($id)
+    {
+        $find = Services::with('sub_services', 'services_type')->find($id);
+
+        return response()->json($find);
+    }
 }

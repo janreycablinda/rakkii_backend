@@ -23,8 +23,18 @@ class InsuranceController extends Controller
         $new->phone = $request->phone;
         $new->email = $request->email;
         $new->address = $request->address;
+        $new->tin = $request->tin;
         $new->save();
 
         return response()->json($new);
+    }
+
+    public function delete_insurance($id)
+    {
+        $del = Insurance::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
     }
 }

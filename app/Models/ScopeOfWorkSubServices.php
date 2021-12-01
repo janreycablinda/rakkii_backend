@@ -12,4 +12,8 @@ class ScopeOfWorkSubServices extends Model
     public function sub_services(){
         return $this->hasOne(\App\Models\SubServices::class, 'id', 'sub_services_id');
     }
+
+    public function sub_services_items(){
+        return $this->belongsToMany(\App\Models\ScopeOfWorkServices::class, 'id', 'scope_of_work_services_id');
+    }
 }

@@ -16,12 +16,12 @@ class CreateEstimatesTable extends Migration
         Schema::create('estimates', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
-            $table->string('address');
+            $table->integer('estimate_no');
             $table->string('date');
-            $table->string('insurance_id');
-            $table->string('vehicle');
-            $table->string('plate_no');
+            $table->unsignedBigInteger('insurance_id');
+            $table->unsignedBigInteger('vehicle_id');
             $table->string('status');
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }
