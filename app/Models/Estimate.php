@@ -35,7 +35,6 @@ class Estimate extends Model
 
         static::creating(function($model) {
             $model->estimate_no = Estimate::max('estimate_no') +1;
-            // $model->estimate_no = 'EST-' . str_pad($model->number, 5, 0, STR_PAD_LEFT);
         });
     }
 

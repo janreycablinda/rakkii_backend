@@ -14,6 +14,10 @@ use Response;
 use DB;
 use App\Models\SubServices;
 use App\Models\EstimateActivityLog;
+use App\Models\JobOrder;
+use App\Models\JobOrderScopeServices;
+use App\Models\JobOrderScopeSubServices;
+use App\Models\JobOrderDocument;
 
 class EstimateController extends Controller
 {
@@ -94,7 +98,7 @@ class EstimateController extends Controller
         $activitylog->activity = 'Created the estimate';
         $activitylog->save();
         
-        return response()->json($new->load('customer', 'activity_log', 'activity_log.user', 'documents', 'scope', 'scope.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance'));
+        return response()->json($new->load('customer', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance'));
     }
 
     public function update_estimate(Request $request)
@@ -371,7 +375,13 @@ class EstimateController extends Controller
             'status' => $request->status
         ]);
 
-        return response()->json(Estimate::with('customer', 'documents', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->where('id', $request->id)->first());
+        $activitylog = new EstimateActivityLog;
+        $activitylog->estimate_id = $request->id;
+        $activitylog->user_id = $request->user_id;
+        $activitylog->activity = 'Marked estimates as '. $request->status;
+        $activitylog->save();
+
+        return response()->json(Estimate::with('customer', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->where('id', $request->id)->first());
     }
 
     public function find_estimates($id)
@@ -406,6 +416,48 @@ class EstimateController extends Controller
 
     public function convert_estimate(Request $request)
     {
+        $get = Estimate::with('customer', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->where('id', $request->id)->first();
+
+        $job_order = new JobOrder;
+        $job_order->customer_id = $get->customer_id;
+        $job_order->date = $get->date;
+        $job_order->insurance_id = $get->insurance_id;
+        $job_order->vehicle_id = $get->vehicle_id;
+        $job_order->status = 'pending';
+        $job_order->save();
+
+        foreach($get->scope as $serv){
+            $newservices = new JobOrderScopeServices;
+            $newservices->job_order_id = $job_order->id;
+            $newservices->services_id = $serv['services_id'];
+            $newservices->labor_fee = $serv['labor_fee'];
+            $newservices->parts_fee = $serv['parts_fee'];
+            $newservices->save();
+            if($serv['sub_services'] != ''){
+                foreach($serv['sub_services'] as $sub){
+                    $newsubservices = new JobOrderScopeSubServices;
+                    $newsubservices->job_order_scope_services_id = $newservices->id;
+                    $newsubservices->sub_services_id = $sub['sub_services_id'];
+                    $newsubservices->labor_fee = $sub['labor_fee'];
+                    $newsubservices->parts_fee = $sub['parts_fee'];
+                    $newsubservices->save();
+                }
+            }
+        }
+
+        foreach($get->documents as $docs){
+            $newDocs = new JobOrderDocument;
+            $newDocs->customer_id = $get->customer_id;
+            $newDocs->job_order_id = $job_order->id;
+            $newDocs->file_name = $docs['file_name'];
+            $newDocs->document_type = $docs['document_type'];
+            $newDocs->save();
+        }
+
+        $update = Estimate::where('id', $request->id)->update([
+            'is_deleted' => true
+        ]);
         
+        return response()->json($request->id);
     }
 }

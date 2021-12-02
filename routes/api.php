@@ -38,6 +38,7 @@ Route::group([
     'prefix' => 'resources'
 
 ], function ($router) {
+    Route::get('users', 'App\Http\Controllers\UserController@users');
 
     Route::get('units', 'App\Http\Controllers\UnitController@units');
     Route::get('get_country', 'App\Http\Controllers\CountryController@get_country');
@@ -51,6 +52,8 @@ Route::group([
     // Route::post('create_item', 'App\Http\Controllers\ItemController@create_item');
     // Route::put('update_item', 'App\Http\Controllers\ItemController@update_item');
     // Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
+
+    Route::get('job_orders', 'App\Http\Controllers\JobOrderController@job_orders');
 
     Route::post('import_item', 'App\Http\Controllers\ImportController@import_item');
     

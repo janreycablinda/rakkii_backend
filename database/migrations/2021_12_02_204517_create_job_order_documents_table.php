@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolesTable extends Migration
+class CreateJobOrderDocumentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,12 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('job_order_documents', function (Blueprint $table) {
             $table->id();
-            $table->string('role_name');
-            $table->boolean('is_deleted')->default(0);
+            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('job_order_id');
+            $table->string('file_name');
+            $table->string('document_type');
             $table->timestamps();
         });
     }
@@ -28,6 +30,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('job_order_documents');
     }
 }
