@@ -48,14 +48,16 @@ class EstimateController extends Controller
             $newservices->labor_fee = $serv['labor_fee'];
             $newservices->parts_fee = $serv['parts_fee'];
             $newservices->save();
-            if($serv['sub_services'] != ''){
+            if($serv['sub_services']){
                 foreach($serv['sub_services'] as $sub){
-                    $newsubservices = new ScopeOfWorkSubServices;
-                    $newsubservices->scope_of_work_services_id = $newservices->id;
-                    $newsubservices->sub_services_id = $sub['sub_services_id'];
-                    $newsubservices->labor_fee = $sub['labor_fee'];
-                    $newsubservices->parts_fee = $sub['parts_fee'];
-                    $newsubservices->save();
+                    if($sub['sub_services_id']){
+                        $newsubservices = new ScopeOfWorkSubServices;
+                        $newsubservices->scope_of_work_services_id = $newservices->id;
+                        $newsubservices->sub_services_id = $sub['sub_services_id'];
+                        $newsubservices->labor_fee = $sub['labor_fee'];
+                        $newsubservices->parts_fee = $sub['parts_fee'];
+                        $newsubservices->save();
+                    }
                 }
             }
         }

@@ -21,6 +21,8 @@ class CreateJobOrdersTable extends Migration
             $table->unsignedBigInteger('insurance_id');
             $table->unsignedBigInteger('vehicle_id');
             $table->string('status');
+            $table->date('car_in')->nullable();
+            $table->date('car_out')->nullable();
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
