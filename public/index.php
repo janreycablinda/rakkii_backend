@@ -33,10 +33,10 @@ if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
 
 require __DIR__.'/../vendor/autoload.php';
 
-// $mpdf = new \Mpdf\Mpdf(['tempDir' => __DIR__ . '/custom/temp/dir/path']);
-$mpdf = new \Mpdf\Mpdf([
-    'tempDir' => __DIR__ . '/tmp'
-]);
+
+// $mpdf = new \Mpdf\Mpdf([
+//     'tempDir' => __DIR__ . '/tmp'
+// ]);
 /*
 |--------------------------------------------------------------------------
 | Run The Application
