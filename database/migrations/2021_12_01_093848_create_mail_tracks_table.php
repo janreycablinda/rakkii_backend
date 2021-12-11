@@ -15,6 +15,10 @@ class CreateMailTracksTable extends Migration
     {
         Schema::create('mail_tracks', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('estimate_id');
+            $table->string('email');
+            $table->string('action');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }

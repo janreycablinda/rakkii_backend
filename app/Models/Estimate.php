@@ -42,4 +42,14 @@ class Estimate extends Model
     {
         return $this->hasMany(\App\Models\EstimateActivityLog::class, 'estimate_id', 'id');
     }
+
+    public function loa_documents()
+    {
+        return $this->hasMany(\App\Models\LoaDocument::class, 'estimate_id', 'id');
+    }
+
+    public function mail()
+    {
+        return $this->hasMany(\App\Models\MailTrack::class, 'estimate_id', 'id');
+    }
 }

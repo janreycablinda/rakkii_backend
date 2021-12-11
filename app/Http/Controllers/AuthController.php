@@ -10,7 +10,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'checkUploaderUrl']]);
     }
 
     /**
@@ -22,7 +22,7 @@ class AuthController extends Controller
     {
         $credentials = request(['username', 'password']);
 
-        if (! $token = auth()->attempt($credentials)) {
+        if (! $token = auth()->claims(['role' => 'role'])->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
@@ -59,6 +59,13 @@ class AuthController extends Controller
     public function refresh()
     {
         return $this->respondWithToken(auth()->refresh());
+    }
+
+    public function checkUploaderUrl()
+    {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
     }
 
     /**

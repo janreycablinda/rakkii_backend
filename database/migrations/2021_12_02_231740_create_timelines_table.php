@@ -17,12 +17,14 @@ class CreateTimelinesTable extends Migration
             $table->id();
             $table->unsignedBigInteger('job_order_id');
             $table->unsignedBigInteger('services_type_id');
-            $table->date('date_start');
-            $table->date('date_done');
-            $table->date('commitment_date');
-            $table->integer('panels');
-            $table->string('remarks');
-            $table->unsignedBigInteger('personnel_id');
+            $table->date('date_start')->nullable();
+            $table->date('date_done')->nullable();
+            $table->date('commitment_date')->nullable();
+            $table->integer('panels')->nullable();
+            $table->string('remarks')->nullable();
+            $table->unsignedBigInteger('personnel_id')->nullable();
+            $table->string('status');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }

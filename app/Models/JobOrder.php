@@ -42,4 +42,9 @@ class JobOrder extends Model
     {
         return $this->hasMany(\App\Models\JobOrderActivityLog::class, 'job_order_id', 'id');
     }
+
+    public function timeline()
+    {
+        return $this->hasMany(\App\Models\Timeline::class, 'job_order_id', 'id');
+    }
 }

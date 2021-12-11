@@ -54,7 +54,16 @@ Route::group([
     // Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
     
     Route::get('job_orders', 'App\Http\Controllers\JobOrderController@job_orders');
-    Route::post('car_in', 'App\Http\Controllers\JobOrderController@car_in');
+    Route::post('start_working', 'App\Http\Controllers\JobOrderController@start_working');
+    Route::post('start_working_timeline', 'App\Http\Controllers\JobOrderController@start_working_timeline');
+    Route::post('complete_timeline', 'App\Http\Controllers\JobOrderController@complete_timeline');
+    Route::get('find_timeline/{id}', 'App\Http\Controllers\JobOrderController@find_timeline');
+    Route::post('update_timeline', 'App\Http\Controllers\JobOrderController@update_timeline');
+    Route::get('find_job_order/{id}', 'App\Http\Controllers\JobOrderController@find_job_order');
+    Route::post('update_job_order', 'App\Http\Controllers\JobOrderController@update_job_order');
+    
+    
+    Route::post('update_status_job_order', 'App\Http\Controllers\JobOrderController@update_status_job_order');
 
     Route::post('import_item', 'App\Http\Controllers\ImportController@import_item');
     
@@ -97,6 +106,9 @@ Route::group([
     Route::get('find_estimates/{id}', 'App\Http\Controllers\EstimateController@find_estimates');
     Route::get('find_sub_services/{id}', 'App\Http\Controllers\EstimateController@find_sub_services');
     Route::get('sub_services/{id}', 'App\Http\Controllers\EstimateController@sub_services');
+    Route::get('estimate_count', 'App\Http\Controllers\EstimateController@estimate_count');
+    Route::post('send_estimate_to_loa', 'App\Http\Controllers\EstimateController@send_estimate_to_loa');
+    
 
     Route::get('find_property/{id}', 'App\Http\Controllers\PropertyController@find_property');
     Route::post('add_property', 'App\Http\Controllers\PropertyController@add_property');
@@ -115,4 +127,23 @@ Route::group([
     Route::get('get_customer_profile/{id}', 'App\Http\Controllers\CustomerController@get_customer_profile');
 
     Route::get('document_download/{file_name}', 'App\Http\Controllers\DocumentController@document_download');
+    Route::post('add_documents', 'App\Http\Controllers\DocumentController@add_documents');
+    Route::post('add_loa_documents', 'App\Http\Controllers\DocumentController@add_loa_documents');
+    Route::delete('delete_loa_document/{id}/{estimate_id}', 'App\Http\Controllers\DocumentController@delete_loa_document');
+    Route::delete('delete_document/{id}/{estimate_id}', 'App\Http\Controllers\DocumentController@delete_document');
+    
+
+    Route::get('personnels', 'App\Http\Controllers\PersonnelController@personnels');
+    Route::post('add_personnel', 'App\Http\Controllers\PersonnelController@add_personnel');
+
+    Route::get('personnel_types', 'App\Http\Controllers\PersonnelTypeController@personnel_types');
+    Route::post('add_personnel_type', 'App\Http\Controllers\PersonnelTypeController@add_personnel_type');
+
+    Route::post('upload_loa_document', 'App\Http\Controllers\LoaDocumentController@upload_loa_document');
+    Route::get('/uploader/{estimate}', function (Request $request) {
+        if (! $request->hasValidSignature()) {
+            abort(401);
+        }
+        return response()->json(200);
+    })->name('uploader');
 });
