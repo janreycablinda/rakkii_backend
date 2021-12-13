@@ -15,6 +15,11 @@ class CreatePurchasesTable extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('item_id');
+            $table->integer('qty');
+            $table->unsignedBigInteger('unit_id');
+            $table->unsignedBigInteger('user_id');
+            $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });
     }

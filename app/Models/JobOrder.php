@@ -38,6 +38,10 @@ class JobOrder extends Model
         return $this->hasMany(\App\Models\JobOrderDocument::class, 'job_order_id', 'id');
     }
 
+    public function loa_documents(){
+        return $this->hasMany(\App\Models\JobOrderLoaDocument::class, 'job_order_id', 'id');
+    }
+
     public function activity_log()
     {
         return $this->hasMany(\App\Models\JobOrderActivityLog::class, 'job_order_id', 'id');
@@ -46,5 +50,10 @@ class JobOrder extends Model
     public function timeline()
     {
         return $this->hasMany(\App\Models\Timeline::class, 'job_order_id', 'id');
+    }
+
+    public function payables()
+    {
+        return $this->hasOne(\App\Models\Payable::class, 'job_order_id', 'id');
     }
 }

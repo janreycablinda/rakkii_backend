@@ -21,6 +21,11 @@ use App\Models\JobOrderDocument;
 use App\Mail\MailEstimate;
 use URL;
 use App\Models\MailTrack;
+use App\Models\Payable;
+use Carbon\Carbon;
+use App\Models\JobOrderLoaDocument;
+use App\Models\JobOrderActivityLog;
+
 
 class EstimateController extends Controller
 {
@@ -441,11 +446,20 @@ class EstimateController extends Controller
 
         $job_order = new JobOrder;
         $job_order->customer_id = $get->customer_id;
-        $job_order->date = $get->date;
+        $job_order->date = Carbon::now()->format('Y-m-d');
         $job_order->insurance_id = $get->insurance_id;
         $job_order->vehicle_id = $get->vehicle_id;
         $job_order->status = 'pending';
         $job_order->save();
+
+        $payables = new Payable;
+        $payables->job_order_id = $job_order->id;
+        $payables->total_repair_cost = 0;
+        $payables->policy_deductible = 0;
+        $payables->betterment = 0;
+        $payables->discount = 0;
+        $payables->net = 0;
+        $payables->save();
 
         foreach($get->scope as $serv){
             $newservices = new JobOrderScopeServices;
@@ -475,6 +489,13 @@ class EstimateController extends Controller
             $newDocs->save();
         }
 
+        foreach($get->loa_documents as $loa){
+            $newLoaDocs = new JobOrderLoaDocument;
+            $newLoaDocs->job_order_id = $job_order->id;
+            $newLoaDocs->file_name = $loa['file_name'];
+            $newLoaDocs->save();
+        }
+
         if($request->status == ''){
             $update = Estimate::where('id', $request->id)->update([
                 'is_deleted' => true
@@ -489,9 +510,13 @@ class EstimateController extends Controller
             $activitylog->user_id = $request->user_id;
             $activitylog->activity = 'has converted to job order #JO-000' . $job_order->job_order_no . ' and save as '. $request->status;
             $activitylog->save();
-        }
 
-        
+            $activitylog = new JobOrderActivityLog;
+            $activitylog->job_order_id = $job_order->id;
+            $activitylog->user_id = $request->user_id;
+            $activitylog->activity = 'Created the job order using #EST-000' . $get->estimate_no;
+            $activitylog->save();
+        }
         
         return response()->json(['data' =>Estimate::with('mail.user', 'customer', 'loa_documents', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->where('id', $request->id)->first(), 'status' => $request->status]);
     }

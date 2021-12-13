@@ -8,12 +8,13 @@ use App\Models\JobOrderActivityLog;
 use App\Models\Timeline;
 use App\Models\JobOrderScopeServices;
 use App\Models\JobOrderScopeSubServices;
+use App\Models\Payable;
 
 class JobOrderController extends Controller
 {
     public function job_orders()
     {
-        $get = JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('is_deleted', false)->get();
+        $get = JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('is_deleted', false)->get();
 
         return response()->json($get);
     }
@@ -35,7 +36,7 @@ class JobOrderController extends Controller
             $timeline->save();
         }
         
-        return response()->json(JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->find($request->id));
+        return response()->json(JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->find($request->id));
     }
 
     public function start_working_timeline(Request $request)
@@ -48,7 +49,7 @@ class JobOrderController extends Controller
             'status' => 'inprogress'
         ]);
 
-        return response()->json(JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->job_order_id)->first());
+        return response()->json(JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->job_order_id)->first());
     }
 
     public function update_status_job_order(Request $request)
@@ -63,7 +64,7 @@ class JobOrderController extends Controller
         $activitylog->activity = 'Marked estimates as '. $request->status;
         $activitylog->save();
 
-        return response()->json(JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->find($request->id));
+        return response()->json(JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->find($request->id));
     }
 
     public function complete_timeline(Request $request)
@@ -74,7 +75,7 @@ class JobOrderController extends Controller
             'status' => 'completed'
         ]);
 
-        return response()->json(JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->job_order_id)->first());
+        return response()->json(JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->job_order_id)->first());
     }
 
     public function update_timeline(Request $request)
@@ -88,7 +89,7 @@ class JobOrderController extends Controller
             'remarks' => $request->remarks,
         ]);
 
-        return response()->json(JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->job_order_id)->first());
+        return response()->json(JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->job_order_id)->first());
     }
 
     public function find_timeline($id)
@@ -100,7 +101,7 @@ class JobOrderController extends Controller
 
     public function find_job_order($id)
     {
-        $get = JobOrder::with('customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $id)->first();
+        $get = JobOrder::with('loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $id)->first();
 
         return response()->json($get);
     }
@@ -112,6 +113,14 @@ class JobOrderController extends Controller
             'date' => $request->date,
             'insurance_id' => $request->insurance_id,
             'vehicle_id' => $request->vehicle_id,
+        ]);
+
+        $update = Payable::where('job_order_id', $request->id)->update([
+            'total_repair_cost' => $request->total_repair_cost,
+            'policy_deductible' => $request->policy_deductible,
+            'betterment' => $request->betterment,
+            'discount' => $request->discount,
+            'net' => $request->net,
         ]);
 
         $services = $request->services;
