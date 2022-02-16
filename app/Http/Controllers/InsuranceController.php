@@ -14,6 +14,13 @@ class InsuranceController extends Controller
         return response()->json($get);
     }
 
+    public function find_insurance($id)
+    {
+        $get = Insurance::where('id', $id)->where('is_deleted', false)->first();
+
+        return response()->json($get);
+    }
+
     public function add_insurance(Request $request)
     {
         $new = new Insurance;

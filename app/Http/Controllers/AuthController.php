@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\PermissionRole;
 
 class AuthController extends Controller
 {
@@ -26,7 +28,9 @@ class AuthController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        return $this->respondWithToken($token);
+        $permissions = PermissionRole::with('permission')->where('role_id', auth()->user()->role_id)->get();
+
+        return response()->json(['access_token' => $token, 'permissions' => $permissions]);
     }
 
     /**
@@ -36,7 +40,8 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        $get = User::where('id', auth()->user()->id)->with('role.permissions.permission')->first();
+        return response()->json($get);
     }
 
     /**
@@ -63,9 +68,7 @@ class AuthController extends Controller
 
     public function checkUploaderUrl()
     {
-        if (! $request->hasValidSignature()) {
-            abort(401);
-        }
+
     }
 
     /**

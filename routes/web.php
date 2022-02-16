@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
+use App\Events\RealTimeNotification;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +16,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+    // dd(Carbon::now()->subDays(7)->startOfWeek());
+    // dd(Carbon::now()->endOfWeek());
+    // dd(Carbon::now()->subDays(6));
     return view('welcome');
+});
+
+Route::get('broadcast', function() {
+    broadcast(new RealTimeNotification());
 });
 
 Route::get('item/export/', 'App\Http\Controllers\ImportController@export');

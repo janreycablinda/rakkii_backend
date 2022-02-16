@@ -291,44 +291,6 @@ class EstimateController extends Controller
         
         return response()->json($new->load('mail.user', 'customer', 'loa_documents', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance'));
 
-        // $data["email"]=$request->email;
-        // $data["client_name"]='janreycablinda';
-        // $data["messages"]=$request->form_message;
-        // $data["completed"]='test';
-        // $data["subject"]='RAKKII AUTO SERVICES';
- 
-        // $pdf = PDF::loadView('test', $data);
-
-        // $path = public_path('img/upload/CIP-1637383815.pdf');
-        // $path2 = public_path('img/upload/CIP-1637383815.pdf');
-        
-        // try{
-        //     Mail::send('emails.mail', $data, function($message)use($data,$path,$path2) {
-        //     $message->to($data["email"], $data["client_name"])
-        //     ->subject($data["subject"])
-        //     ->attachData($pdf->output(), "report.pdf")
-        //     ->attach($path, [
-        //         'as' => 'name.pdf',
-        //         'mime' => 'application/pdf',
-        //     ])
-        //     ->attach($path2, [
-        //         'as' => 'name2.pdf',
-        //         'mime' => 'application/pdf',
-        //     ]);
-        //     });
-        // }catch(JWTException $exception){
-        //     $this->serverstatuscode = "0";
-        //     $this->serverstatusdes = $exception->getMessage();
-        // }
-        // if (Mail::failures()) {
-        //      $this->statusdesc  =   "Error sending mail";
-        //      $this->statuscode  =   "0";
- 
-        // }else{
- 
-        //    $this->statusdesc  =   "Message sent Succesfully";
-        //    $this->statuscode  =   "1";
-        // }
     }
 
     public function update_status_estimate(Request $request)
@@ -417,6 +379,13 @@ class EstimateController extends Controller
         return response()->json($get);
     }
 
+    public function find_estimate_customer($id)
+    {
+        $get = Estimate::with('mail.user', 'customer', 'documents', 'scope.sub_services.sub_services', 'scope.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->where('customer_id', $id)->where('is_deleted', false)->get();
+       
+        return response()->json($get);
+    }
+
     public function find_sub_services($id)
     {
         $get = ScopeOfWorkSubServices::where('scope_of_work_services_id', $id)->get();
@@ -446,10 +415,10 @@ class EstimateController extends Controller
 
         $job_order = new JobOrder;
         $job_order->customer_id = $get->customer_id;
-        $job_order->date = Carbon::now()->format('Y-m-d');
+        $job_order->date = Carbon::now();
         $job_order->insurance_id = $get->insurance_id;
         $job_order->vehicle_id = $get->vehicle_id;
-        $job_order->status = 'pending';
+        $job_order->status = 'Pending';
         $job_order->save();
 
         $payables = new Payable;

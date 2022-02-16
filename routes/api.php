@@ -39,17 +39,26 @@ Route::group([
 
 ], function ($router) {
     Route::get('users', 'App\Http\Controllers\UserController@users');
+    Route::post('add_user', 'App\Http\Controllers\UserController@add_user');
+    Route::put('update_user', 'App\Http\Controllers\UserController@update_user');
+    Route::delete('delete_user/{id}', 'App\Http\Controllers\UserController@delete_user');
 
     Route::get('units', 'App\Http\Controllers\UnitController@units');
     Route::get('get_country', 'App\Http\Controllers\CountryController@get_country');
+
+    Route::get('roles', 'App\Http\Controllers\RoleController@roles');
+    Route::get('role_options', 'App\Http\Controllers\RoleController@role_options');
+    Route::post('add_role', 'App\Http\Controllers\RoleController@add_role');
+    Route::put('update_role', 'App\Http\Controllers\RoleController@update_role');
+    Route::delete('delete_role/{id}', 'App\Http\Controllers\RoleController@delete_role');
 
     Route::get('groups', 'App\Http\Controllers\GroupController@groups');
     Route::post('create_group', 'App\Http\Controllers\GroupController@create_group');
     Route::put('update_group', 'App\Http\Controllers\GroupController@update_group');
     Route::delete('delete_group/{id}', 'App\Http\Controllers\GroupController@delete_group');
     
-    // Route::get('items', 'App\Http\Controllers\ItemController@items');
-    // Route::post('create_item', 'App\Http\Controllers\ItemController@create_item');
+    Route::get('items', 'App\Http\Controllers\ItemController@items');
+    Route::post('create_item', 'App\Http\Controllers\ItemController@create_item');
     // Route::put('update_item', 'App\Http\Controllers\ItemController@update_item');
     // Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
     
@@ -60,9 +69,14 @@ Route::group([
     Route::get('find_timeline/{id}', 'App\Http\Controllers\JobOrderController@find_timeline');
     Route::post('update_timeline', 'App\Http\Controllers\JobOrderController@update_timeline');
     Route::get('find_job_order/{id}', 'App\Http\Controllers\JobOrderController@find_job_order');
+    Route::get('find_customer_job_order/{id}', 'App\Http\Controllers\JobOrderController@find_customer_job_order');
+    
+    Route::get('find_job_order/{id}/{property_id}/{status}', 'App\Http\Controllers\JobOrderController@find_job_order_status');
     Route::post('update_job_order', 'App\Http\Controllers\JobOrderController@update_job_order');
-    
-    
+    Route::post('send_job_order_estimate_to_loa', 'App\Http\Controllers\JobOrderController@send_job_order_estimate_to_loa');
+    // Route::post('add_purchase', 'App\Http\Controllers\JobOrderController@add_purchase');
+    Route::post('job_order_complete', 'App\Http\Controllers\JobOrderController@job_order_complete');
+
     Route::post('update_status_job_order', 'App\Http\Controllers\JobOrderController@update_status_job_order');
 
     Route::post('import_item', 'App\Http\Controllers\ImportController@import_item');
@@ -87,8 +101,6 @@ Route::group([
 
     Route::get('services_type', 'App\Http\Controllers\ServicesTypeController@services_type');
     Route::post('add_services_type', 'App\Http\Controllers\ServicesTypeController@add_services_type');
-    
-    
 
     Route::get('services', 'App\Http\Controllers\ServicesController@services');
     Route::post('add_services', 'App\Http\Controllers\ServicesController@add_services');
@@ -104,6 +116,7 @@ Route::group([
     Route::post('add_estimate_save_send', 'App\Http\Controllers\EstimateController@add_estimate_save_send');
     Route::post('update_status_estimate', 'App\Http\Controllers\EstimateController@update_status_estimate');
     Route::get('find_estimates/{id}', 'App\Http\Controllers\EstimateController@find_estimates');
+    Route::get('find_estimate_customer/{id}', 'App\Http\Controllers\EstimateController@find_estimate_customer');
     Route::get('find_sub_services/{id}', 'App\Http\Controllers\EstimateController@find_sub_services');
     Route::get('sub_services/{id}', 'App\Http\Controllers\EstimateController@sub_services');
     Route::get('estimate_count', 'App\Http\Controllers\EstimateController@estimate_count');
@@ -117,6 +130,7 @@ Route::group([
     Route::post('add_vehicle', 'App\Http\Controllers\VehicleController@add_vehicle');
 
     Route::get('insurance', 'App\Http\Controllers\InsuranceController@insurance');
+    Route::get('find_insurance/{id}', 'App\Http\Controllers\InsuranceController@find_insurance');
     Route::post('add_insurance', 'App\Http\Controllers\InsuranceController@add_insurance');
     Route::delete('delete_insurance/{id}', 'App\Http\Controllers\InsuranceController@delete_insurance');
     
@@ -127,10 +141,20 @@ Route::group([
     Route::get('get_customer_profile/{id}', 'App\Http\Controllers\CustomerController@get_customer_profile');
 
     Route::get('document_download/{file_name}', 'App\Http\Controllers\DocumentController@document_download');
+    Route::get('find_documents/{id}', 'App\Http\Controllers\DocumentController@find_documents');
+    Route::get('find_loa_documents/{id}', 'App\Http\Controllers\DocumentController@find_loa_documents');
     Route::post('add_documents', 'App\Http\Controllers\DocumentController@add_documents');
     Route::post('add_loa_documents', 'App\Http\Controllers\DocumentController@add_loa_documents');
     Route::delete('delete_loa_document/{id}/{estimate_id}', 'App\Http\Controllers\DocumentController@delete_loa_document');
     Route::delete('delete_document/{id}/{estimate_id}', 'App\Http\Controllers\DocumentController@delete_document');
+    
+    Route::delete('delete_job_order_document/{id}/{estimate_id}', 'App\Http\Controllers\DocumentController@delete_job_order_document');
+    Route::delete('delete_job_order_loa_document/{id}/{estimate_id}', 'App\Http\Controllers\DocumentController@delete_job_order_loa_document');
+
+    Route::post('add_job_order_documents', 'App\Http\Controllers\DocumentController@add_job_order_documents');
+    Route::post('add_job_order_loa_documents', 'App\Http\Controllers\DocumentController@add_job_order_loa_documents');
+
+    
     
 
     Route::get('personnels', 'App\Http\Controllers\PersonnelController@personnels');
@@ -146,4 +170,33 @@ Route::group([
         }
         return response()->json(200);
     })->name('uploader');
+    
+    Route::get('purchases', 'App\Http\Controllers\PurchaseController@purchases');
+    Route::post('add_purchases', 'App\Http\Controllers\PurchaseController@add_purchases');
+    Route::delete('delete_purchase/{id}/{job_order_id}', 'App\Http\Controllers\PurchaseController@delete_purchase');
+
+    Route::get('agents', 'App\Http\Controllers\AgentController@agents');
+    Route::post('create_agent', 'App\Http\Controllers\AgentController@create_agent');
+    
+    Route::get('payments', 'App\Http\Controllers\PaymentController@payments');
+    Route::post('add_payment', 'App\Http\Controllers\PaymentController@add_payment');
+    Route::delete('delete_payment/{id}/{job_order_id}', 'App\Http\Controllers\PaymentController@delete_payment');
+    
+    Route::get('gate_pass_no', 'App\Http\Controllers\GatePassController@gate_pass_no');
+    Route::post('submit_gatepass', 'App\Http\Controllers\GatePassController@submit_gatepass');
+    Route::post('delete_gatepass', 'App\Http\Controllers\GatePassController@delete_gatepass');
+    
+    Route::get('cash_collected', 'App\Http\Controllers\ChartController@cash_collected');
+    Route::get('cash_collectables', 'App\Http\Controllers\ChartController@cash_collectables');
+    
+    Route::get('weekly_payment', 'App\Http\Controllers\PaymentController@weekly_payment');
+    
+    Route::get('todos', 'App\Http\Controllers\TodoController@todos');
+    Route::post('add_todo', 'App\Http\Controllers\TodoController@add_todo');
+    Route::post('update_todo', 'App\Http\Controllers\TodoController@update_todo');
+    Route::post('update_status_todo', 'App\Http\Controllers\TodoController@update_status_todo');
+    Route::delete('delete_todo/{id}', 'App\Http\Controllers\TodoController@delete_todo');
+    
+    Route::get('notifications', 'App\Http\Controllers\NotificationController@notifications');
+    
 });

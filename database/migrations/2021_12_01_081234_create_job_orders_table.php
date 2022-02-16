@@ -16,6 +16,7 @@ class CreateJobOrdersTable extends Migration
         Schema::create('job_orders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('agent_id')->nullable();
             $table->integer('job_order_no');
             $table->string('date');
             $table->unsignedBigInteger('insurance_id');
@@ -23,6 +24,7 @@ class CreateJobOrdersTable extends Migration
             $table->string('status');
             $table->date('car_in')->nullable();
             $table->date('car_out')->nullable();
+            $table->string('job_order_no_str');
             $table->boolean('is_deleted')->default(0);
             $table->timestamps();
         });

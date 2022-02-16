@@ -18,6 +18,10 @@ class JobOrder extends Model
         });
     }
 
+    public function payments(){
+        return $this->hasMany(\App\Models\Payment::class, 'job_order_id', 'id');
+    }
+
     public function customer(){
         return $this->hasOne(\App\Models\Customer::class, 'id', 'customer_id');
     }
@@ -52,8 +56,23 @@ class JobOrder extends Model
         return $this->hasMany(\App\Models\Timeline::class, 'job_order_id', 'id');
     }
 
+    public function mail()
+    {
+        return $this->hasMany(\App\Models\JobOrderMailTrack::class, 'job_order_id', 'id');
+    }
+
     public function payables()
     {
         return $this->hasOne(\App\Models\Payable::class, 'job_order_id', 'id');
     }
+
+    public function purchases()
+    {
+        return $this->hasMany(\App\Models\Purchase::class, 'job_order_id', 'id');
+    }
+
+    public function gatepass(){
+        return $this->hasOne(\App\Models\GatePass::class, 'job_order_id', 'id');
+    }
+    
 }

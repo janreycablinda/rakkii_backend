@@ -21,7 +21,7 @@ class CreateNotificationsTable extends Migration
             $table->string('status');
             $table->string('for');
             $table->string('type');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
         });
     }
