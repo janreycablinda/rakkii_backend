@@ -39,8 +39,13 @@ class EstimateController extends Controller
     public function estimate_count()
     {
         $get = Estimate::latest()->first();
+        if($get){
+            $count = $get->estimate_no+1;
+        }else{
+            $count = 1;
+        }
 
-        return response()->json($get->estimate_no+1);
+        return response()->json($count);
     }
 
     public function add_estimate(Request $request)
