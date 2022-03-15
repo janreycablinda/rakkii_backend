@@ -22,4 +22,13 @@ class ServicesTypeController extends Controller
 
         return response()->json($add);
     }
+
+    public function delete_services_type($id)
+    {
+        $del = Services_type::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
+    }
 }

@@ -12,4 +12,8 @@ class CarProperty extends Model
     public function vehicle(){
         return $this->hasOne(\App\Models\Vehicle::class, 'id', 'vehicle_id');
     }
+
+    public function customer(){
+        return $this->hasOne(\App\Models\Customer::class, 'id', 'customer_id');
+    }
 }

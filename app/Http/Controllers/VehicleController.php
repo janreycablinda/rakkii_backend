@@ -22,4 +22,13 @@ class VehicleController extends Controller
 
         return response()->json($new);
     }
+
+    public function delete_vehicle($id)
+    {
+        $del = Vehicle::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
+    }
 }

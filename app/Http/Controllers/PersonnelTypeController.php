@@ -22,4 +22,13 @@ class PersonnelTypeController extends Controller
 
         return response()->json($new);
     }
+
+    public function delete_personnel_type($id)
+    {
+        $del = PersonnelType::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
+    }
 }

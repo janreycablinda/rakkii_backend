@@ -9,6 +9,8 @@ class Purchase extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['supplier_id'];
+
     public function supplier(){
         return $this->hasOne(\App\Models\Supplier::class, 'id', 'supplier_id');
     }

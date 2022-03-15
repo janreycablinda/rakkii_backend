@@ -44,6 +44,8 @@ Route::group([
     Route::delete('delete_user/{id}', 'App\Http\Controllers\UserController@delete_user');
 
     Route::get('units', 'App\Http\Controllers\UnitController@units');
+    Route::post('add_unit', 'App\Http\Controllers\UnitController@add_unit');
+    Route::delete('delete_unit/{id}', 'App\Http\Controllers\UnitController@delete_unit');
     Route::get('get_country', 'App\Http\Controllers\CountryController@get_country');
 
     Route::get('roles', 'App\Http\Controllers\RoleController@roles');
@@ -60,7 +62,7 @@ Route::group([
     Route::get('items', 'App\Http\Controllers\ItemController@items');
     Route::post('create_item', 'App\Http\Controllers\ItemController@create_item');
     // Route::put('update_item', 'App\Http\Controllers\ItemController@update_item');
-    // Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
+    Route::delete('delete_item/{id}', 'App\Http\Controllers\ItemController@delete_item');
     
     Route::get('job_orders', 'App\Http\Controllers\JobOrderController@job_orders');
     Route::post('start_working', 'App\Http\Controllers\JobOrderController@start_working');
@@ -101,12 +103,15 @@ Route::group([
 
     Route::get('services_type', 'App\Http\Controllers\ServicesTypeController@services_type');
     Route::post('add_services_type', 'App\Http\Controllers\ServicesTypeController@add_services_type');
+    Route::delete('delete_services_type/{id}', 'App\Http\Controllers\ServicesTypeController@delete_services_type');
 
     Route::get('services', 'App\Http\Controllers\ServicesController@services');
     Route::post('add_services', 'App\Http\Controllers\ServicesController@add_services');
     Route::get('find_services/{id}', 'App\Http\Controllers\ServicesController@find_services');
+    Route::delete('delete_services/{id}', 'App\Http\Controllers\ServicesController@delete_services');
 
     Route::post('add_sub_services', 'App\Http\Controllers\SubServicesController@add_sub_services');
+    Route::delete('delete_sub_services/{id}', 'App\Http\Controllers\SubServicesController@delete_sub_services');
     
     Route::get('estimates', 'App\Http\Controllers\EstimateController@estimates');
     Route::post('add_estimate', 'App\Http\Controllers\EstimateController@add_estimate');
@@ -125,9 +130,12 @@ Route::group([
 
     Route::get('find_property/{id}', 'App\Http\Controllers\PropertyController@find_property');
     Route::post('add_property', 'App\Http\Controllers\PropertyController@add_property');
+    Route::delete('delete_property/{id}', 'App\Http\Controllers\PropertyController@delete_property');
 
     Route::get('vehicles', 'App\Http\Controllers\VehicleController@vehicles');
     Route::post('add_vehicle', 'App\Http\Controllers\VehicleController@add_vehicle');
+    Route::delete('delete_vehicle/{id}', 'App\Http\Controllers\VehicleController@delete_vehicle');
+    
 
     Route::get('insurance', 'App\Http\Controllers\InsuranceController@insurance');
     Route::get('find_insurance/{id}', 'App\Http\Controllers\InsuranceController@find_insurance');
@@ -154,14 +162,13 @@ Route::group([
     Route::post('add_job_order_documents', 'App\Http\Controllers\DocumentController@add_job_order_documents');
     Route::post('add_job_order_loa_documents', 'App\Http\Controllers\DocumentController@add_job_order_loa_documents');
 
-    
-    
-
     Route::get('personnels', 'App\Http\Controllers\PersonnelController@personnels');
     Route::post('add_personnel', 'App\Http\Controllers\PersonnelController@add_personnel');
+    Route::delete('delete_personnel/{id}', 'App\Http\Controllers\PersonnelController@delete_personnel');
 
     Route::get('personnel_types', 'App\Http\Controllers\PersonnelTypeController@personnel_types');
     Route::post('add_personnel_type', 'App\Http\Controllers\PersonnelTypeController@add_personnel_type');
+    Route::delete('delete_personnel_type/{id}', 'App\Http\Controllers\PersonnelTypeController@delete_personnel_type');
 
     Route::post('upload_loa_document', 'App\Http\Controllers\LoaDocumentController@upload_loa_document');
     Route::get('/uploader/{estimate}', function (Request $request) {
@@ -173,14 +180,25 @@ Route::group([
     
     Route::get('purchases', 'App\Http\Controllers\PurchaseController@purchases');
     Route::post('add_purchases', 'App\Http\Controllers\PurchaseController@add_purchases');
+    Route::post('edit_purchases', 'App\Http\Controllers\PurchaseController@edit_purchases');
     Route::delete('delete_purchase/{id}/{job_order_id}', 'App\Http\Controllers\PurchaseController@delete_purchase');
+    Route::delete('delete_purchase_item/{id}', 'App\Http\Controllers\PurchaseController@delete_purchase_item');
+    
+    Route::get('expenses_type', 'App\Http\Controllers\ExpensesTypeController@expenses_type');
+    Route::post('create_expenses_type', 'App\Http\Controllers\ExpensesTypeController@create_expenses_type');
+    Route::delete('delete_expenses_type/{id}', 'App\Http\Controllers\ExpensesTypeController@delete_expenses_type');
 
     Route::get('agents', 'App\Http\Controllers\AgentController@agents');
     Route::post('create_agent', 'App\Http\Controllers\AgentController@create_agent');
+    Route::delete('delete_agent/{id}', 'App\Http\Controllers\AgentController@delete_agent');
+    
     
     Route::get('payments', 'App\Http\Controllers\PaymentController@payments');
+    Route::get('payment_list', 'App\Http\Controllers\PaymentController@payment_list');
     Route::post('add_payment', 'App\Http\Controllers\PaymentController@add_payment');
-    Route::delete('delete_payment/{id}/{job_order_id}', 'App\Http\Controllers\PaymentController@delete_payment');
+    Route::post('update_payment', 'App\Http\Controllers\PaymentController@update_payment');
+    Route::delete('delete_payment/{id}/{billing_statement_id}', 'App\Http\Controllers\PaymentController@delete_payment');
+    Route::delete('delete_payment/{id}', 'App\Http\Controllers\PaymentController@delete_payment_list');
     
     Route::get('gate_pass_no', 'App\Http\Controllers\GatePassController@gate_pass_no');
     Route::post('submit_gatepass', 'App\Http\Controllers\GatePassController@submit_gatepass');
@@ -198,5 +216,18 @@ Route::group([
     Route::delete('delete_todo/{id}', 'App\Http\Controllers\TodoController@delete_todo');
     
     Route::get('notifications', 'App\Http\Controllers\NotificationController@notifications');
+    
+    Route::get('cash_collected_report/{period}', 'App\Http\Controllers\ReportController@cash_collected_report');
+    Route::get('cash_collected_report/{period}/{from}/{to}', 'App\Http\Controllers\ReportController@cash_collected_period_report');
+    
+    Route::get('cash_collectables_report/{period}', 'App\Http\Controllers\ReportController@cash_collectables_report');
+    Route::get('cash_collectables_report/{period}/{from}/{to}', 'App\Http\Controllers\ReportController@cash_collectables_period_report');
+
+    Route::post('create_billing', 'App\Http\Controllers\BillingController@create_billing');
+    Route::get('find_billings/{id}', 'App\Http\Controllers\BillingController@find_billings');
+    Route::get('get_billing_statement_no', 'App\Http\Controllers\BillingController@get_billing_statement_no');
+    Route::get('get_billing_statement', 'App\Http\Controllers\BillingController@get_billing_statement');
+    Route::delete('delete_billing_statement/{id}', 'App\Http\Controllers\BillingController@delete_billing_statement');
+    Route::post('submit_payment', 'App\Http\Controllers\BillingController@submit_payment');
     
 });

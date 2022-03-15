@@ -9,7 +9,7 @@ class PropertyController extends Controller
 {
     public function find_property($id)
     {
-        $find = CarProperty::with('vehicle')->where('customer_id', $id)->where('is_deleted', false)->get();
+        $find = CarProperty::with('customer', 'vehicle')->where('customer_id', $id)->where('is_deleted', false)->get();
 
         return response()->json($find);
     }
@@ -23,5 +23,14 @@ class PropertyController extends Controller
         $new->save();
 
         return response()->json($new->load('vehicle'));
+    }
+
+    public function delete_property($id)
+    {
+        $del = CarProperty::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
     }
 }

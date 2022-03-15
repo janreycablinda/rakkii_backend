@@ -14,9 +14,17 @@ class SubServicesController extends Controller
         $new->services_id = $request->services_id;
         $new->services_name = $request->services_name;
         $new->save();
-        if($new){
-            return response()->json(Services::with('sub_services', 'services_type')->where('is_deleted', false)->get());
-        }
         
+        return response()->json($new);
+        
+    }
+
+    public function delete_sub_services($id)
+    {
+        $del = SubServices::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
     }
 }

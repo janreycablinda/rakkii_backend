@@ -50,7 +50,6 @@ class EstimateController extends Controller
 
     public function add_estimate(Request $request)
     {
-
         $new = new Estimate();
         $new->customer_id = $request->customer_id;
         $new->date = $request->date;
@@ -86,11 +85,13 @@ class EstimateController extends Controller
 
         $file_upload = $request->file('files');
         $pic = $request->file('pic');
+
         if($documents){
             foreach($documents as $key => $docs){
                 if($docs['files'] != ''){
                     if($docs['prefix'] == 'P'){
-                        foreach($pic as $key2 => $pics){
+                        if($pic){
+                            foreach($pic as $key2 => $pics){
                                 $files = $docs['prefix'] .'-'.time(). $key2 .'.'. $pics->extension();
                                 $pics->move(public_path('img/upload'), $files);
             
@@ -100,6 +101,7 @@ class EstimateController extends Controller
                                 $newDocs->file_name = $files;
                                 $newDocs->document_type = $docs['document_name'];
                                 $newDocs->save();
+                            }
                         }
                     }else{
                             $files = $docs['prefix'] .'-'.time(). $key .'.'. $file_upload[$key]->extension();
@@ -203,7 +205,8 @@ class EstimateController extends Controller
             foreach($documents as $key => $docs){
                 if($docs['files'] != ''){
                     if($docs['prefix'] == 'P'){
-                        foreach($pic as $key2 => $pics){
+                        if($pic){
+                            foreach($pic as $key2 => $pics){
                                 $files = $docs['prefix'] .'-'.time(). $key2 .'.'. $pics->extension();
                                 $pics->move(public_path('img/upload'), $files);
             
@@ -213,6 +216,7 @@ class EstimateController extends Controller
                                 $newDocs->file_name = $files;
                                 $newDocs->document_type = $docs['document_name'];
                                 $newDocs->save();
+                            }
                         }
                     }else{
                             $files = $docs['prefix'] .'-'.time(). $key .'.'. $file_upload[$key]->extension();
@@ -379,7 +383,7 @@ class EstimateController extends Controller
 
     public function find_estimates($id)
     {
-        $get = Estimate::with('mail.user', 'customer', 'documents', 'scope.sub_services.sub_services', 'scope.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->find($id);
+        $get = Estimate::with('mail.user', 'customer', 'documents', 'scope.sub_services.sub_services.services', 'scope.sub_services', 'scope.services', 'property', 'property.vehicle', 'insurance')->find($id);
        
         return response()->json($get);
     }
@@ -400,7 +404,7 @@ class EstimateController extends Controller
 
     public function sub_services($id)
     {
-        $get = SubServices::where('services_id', $id)->get();
+        $get = SubServices::where('services_id', $id)->where('is_deleted', false)->get();
 
         return response()->json($get);
     }

@@ -12,4 +12,8 @@ class PurchaseItem extends Model
     public function item(){
         return $this->hasOne(\App\Models\Item::class, 'id', 'item_id');
     }
+
+    public function unit(){
+        return $this->hasOne(\App\Models\Unit::class, 'id', 'unit_id');
+    }
 }

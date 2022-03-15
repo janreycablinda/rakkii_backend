@@ -14,12 +14,13 @@ use App\Models\JobOrderDocument;
 use URL;
 use PDF;
 use Mail;
+use App\Models\OtherExpense;
 
 class JobOrderController extends Controller
 {
     public function job_orders()
     {
-        $get = JobOrder::with('gatepass.user', 'payments.user', 'mail.user', 'purchases.receipts', 'purchases.purchase_items', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('is_deleted', false)->get();
+        $get = JobOrder::with('billings.billing_payment', 'billings.insurance', 'billings.job_order', 'billings.customer', 'gatepass.user', 'payments.user', 'mail.user', 'purchases.receipts', 'purchases.purchase_items', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('is_deleted', false)->get();
 
         return response()->json($get);
     }
@@ -106,7 +107,7 @@ class JobOrderController extends Controller
 
     public function find_job_order($id)
     {
-        $get = JobOrder::with('gatepass.user', 'payments.user', 'mail.user', 'purchases.receipts', 'purchases.purchase_items.item', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $id)->first();
+        $get = JobOrder::with('other_expenses', 'gatepass.user', 'payments.user', 'mail.user', 'purchases.receipts', 'purchases.purchase_items.item', 'purchases.purchase_items.unit', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services.services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $id)->first();
 
         return response()->json($get);
     }
@@ -156,6 +157,17 @@ class JobOrderController extends Controller
                     $newsubservices->parts_fee = $sub['parts_fee'];
                     $newsubservices->save();
                 }
+            }
+        }
+
+        if($request->other_expenses){
+            $del = OtherExpense::where('job_order_id', $request->id)->delete();
+            foreach($request->other_expenses as $other){
+                $expense = new OtherExpense;
+                $expense->job_order_id = $request->id;
+                $expense->expenses_type_id = $other['expenses_type_id'];
+                $expense->amount = $other['amount'];
+                $expense->save();
             }
         }
 

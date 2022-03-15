@@ -13,4 +13,22 @@ class UnitController extends Controller
 
         return response()->json($units);
     }
+
+    public function add_unit(Request $request)
+    {
+        $add = new Unit;
+        $add->name = $request->name;
+        $add->save();
+
+        return response()->json($add);
+    }
+
+    public function delete_unit($id)
+    {
+        $delete = Unit::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
+    }
 }

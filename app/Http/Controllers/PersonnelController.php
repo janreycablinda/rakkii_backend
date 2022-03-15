@@ -9,7 +9,7 @@ class PersonnelController extends Controller
 {
     public function personnels()
     {
-        $get = Personnel::where('is_deleted', false)->get();
+        $get = Personnel::with('personnel_type')->where('is_deleted', false)->get();
 
         return response()->json($get);
     }
@@ -24,5 +24,14 @@ class PersonnelController extends Controller
         $new->save();
 
         return response()->json($new);
+    }
+
+    public function delete_personnel($id)
+    {
+        $del = Personnel::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
     }
 }

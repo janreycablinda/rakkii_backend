@@ -9,7 +9,11 @@ class ServicesController extends Controller
 {
     public function services()
     {
-        $get = Services::with('sub_services', 'services_type')->where('is_deleted', false)->get();
+        $get = Services::with(['sub_services' => function ($query) {
+            $query->where('is_deleted', false);
+        }],['services_type' => function ($query) {
+            $query->where('is_deleted', false);
+        }])->where('is_deleted', false)->get();
 
         return response()->json($get);
     }
@@ -21,13 +25,30 @@ class ServicesController extends Controller
         $new->services_name = $request->services_name;
         $new->save();
 
-        return response()->json($new->load('services_type', 'sub_services'));
+        return response()->json($new->load(['sub_services' => function ($query) {
+            $query->where('is_deleted', false);
+        }],['services_type' => function ($query) {
+            $query->where('is_deleted', false);
+        }]));
     }
 
     public function find_services($id)
     {
-        $find = Services::with('sub_services', 'services_type')->find($id);
+        $find = Services::with(['sub_services' => function ($query) {
+            $query->where('is_deleted', false);
+        }],['services_type' => function ($query) {
+            $query->where('is_deleted', false);
+        }])->find($id);
 
         return response()->json($find);
+    }
+
+    public function delete_services($id)
+    {
+        $del = Services::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
     }
 }

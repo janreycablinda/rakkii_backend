@@ -27,14 +27,16 @@ class PurchaseController extends Controller
 
         $file_upload = $request->file('files');
 
-        foreach($file_upload as $key => $file){
-            $files = 'RP-'. $new->id .time(). $key . '.' . $file->extension();
-            $file->move(public_path('img/upload'), $files);
-
-            $file_new = new PurchaseReceipt;
-            $file_new->purchase_id = $new->id;
-            $file_new->receipt = $files;
-            $file_new->save();
+        if($file_upload){
+            foreach($file_upload as $key => $file){
+                $files = 'RP-'. $new->id .time(). $key . '.' . $file->extension();
+                $file->move(public_path('img/upload'), $files);
+    
+                $file_new = new PurchaseReceipt;
+                $file_new->purchase_id = $new->id;
+                $file_new->receipt = $files;
+                $file_new->save();
+            }
         }
 
         $items = json_decode($request->items, true);
@@ -50,7 +52,50 @@ class PurchaseController extends Controller
             $new_item->save();
         }
 
-        return response()->json(JobOrder::with('mail.user', 'purchases.receipts', 'purchases.purchase_items', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->id)->first());
+        return response()->json(JobOrder::with('mail.user', 'purchases.receipts', 'purchases.purchase_items.item', 'purchases.purchase_items.unit', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $request->id)->first());
+    }
+
+    public function edit_purchases(Request $request)
+    {
+
+        $update = Purchase::find($request->id)->update([
+            'supplier_id' => $request->supplier_id,
+            'date' => $request->date,
+            'user_id' => auth()->user()->id
+        ]);
+
+        $file_upload = $request->file('files');
+
+        if($file_upload){
+            $del = PurchaseReceipt::where('purchase_id', $request->id)->delete();
+            foreach($file_upload as $key => $file){
+                $files = 'RP-'. $request->id .time(). $key . '.' . $file->extension();
+                $file->move(public_path('img/upload'), $files);
+    
+                $file_new = new PurchaseReceipt;
+                $file_new->purchase_id = $request->id;
+                $file_new->receipt = $files;
+                $file_new->save();
+            }
+        }
+
+        $items = json_decode($request->items, true);
+
+        if($items){
+            $del2 = PurchaseItem::where('purchase_id', $request->id)->delete();
+            foreach($items as $key => $item){
+                $new_item = new PurchaseItem;
+                $new_item->purchase_id = $request->id;
+                $new_item->item_id = $item['item_id'];
+                $new_item->qty = $item['qty'];
+                $new_item->unit_id = $item['unit_id'];
+                $new_item->price = $item['price'];
+                $new_item->user_id = auth()->user()->id;
+                $new_item->save();
+            }
+        }
+
+        return response()->json(Purchase::with('supplier', 'receipts', 'purchase_items.item', 'purchase_items.unit')->where('id', $request->id)->first());
     }
 
     public function delete_purchase($id, $job_order_id)
@@ -58,5 +103,12 @@ class PurchaseController extends Controller
         $delete = Purchase::where('id', $id)->delete();
 
         return response()->json(JobOrder::with('mail.user', 'purchases.receipts', 'purchases.purchase_items', 'purchases.supplier', 'loa_documents', 'payables', 'customer', 'timeline.services_type', 'timeline.personnel', 'documents', 'activity_log', 'activity_log.user', 'scope', 'scope.sub_services', 'scope.sub_services.sub_services', 'scope.services.services_type', 'property', 'property.vehicle', 'insurance')->where('id', $job_order_id)->first());
+    }
+
+    public function delete_purchase_item($id)
+    {
+        $delete = PurchaseItem::where('id', $id)->delete();
+
+        return response()->json(200);
     }
 }

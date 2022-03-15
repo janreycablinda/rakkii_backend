@@ -22,4 +22,8 @@ class Payment extends Model
     public function user(){
         return $this->hasOne(\App\Models\User::class, 'id', 'user_id');
     }
+
+    public function job_order(){
+        return $this->hasOne(\App\Models\JobOrder::class, 'id', 'job_order_id');
+    }
 }

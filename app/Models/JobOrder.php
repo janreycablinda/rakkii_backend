@@ -71,8 +71,17 @@ class JobOrder extends Model
         return $this->hasMany(\App\Models\Purchase::class, 'job_order_id', 'id');
     }
 
+    public function other_expenses()
+    {
+        return $this->hasMany(\App\Models\OtherExpense::class, 'job_order_id', 'id');
+    }
+
     public function gatepass(){
         return $this->hasOne(\App\Models\GatePass::class, 'job_order_id', 'id');
     }
     
+    public function billings()
+    {
+        return $this->hasMany(\App\Models\BillingStatement::class, 'job_order_id', 'id');
+    }
 }
