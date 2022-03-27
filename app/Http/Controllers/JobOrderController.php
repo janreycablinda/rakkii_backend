@@ -263,4 +263,13 @@ class JobOrderController extends Controller
         
         return response()->json($get);
     }
+
+    public function delete_job_order($id)
+    {
+        $del = JobOrder::where('id', $id)->update([
+            'is_deleted' => true
+        ]);
+
+        return response()->json(200);
+    }
 }

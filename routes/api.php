@@ -72,6 +72,7 @@ Route::group([
     Route::post('update_timeline', 'App\Http\Controllers\JobOrderController@update_timeline');
     Route::get('find_job_order/{id}', 'App\Http\Controllers\JobOrderController@find_job_order');
     Route::get('find_customer_job_order/{id}', 'App\Http\Controllers\JobOrderController@find_customer_job_order');
+    Route::delete('delete_job_order/{id}', 'App\Http\Controllers\JobOrderController@delete_job_order');
     
     Route::get('find_job_order/{id}/{property_id}/{status}', 'App\Http\Controllers\JobOrderController@find_job_order_status');
     Route::post('update_job_order', 'App\Http\Controllers\JobOrderController@update_job_order');
@@ -229,5 +230,7 @@ Route::group([
     Route::get('get_billing_statement', 'App\Http\Controllers\BillingController@get_billing_statement');
     Route::delete('delete_billing_statement/{id}', 'App\Http\Controllers\BillingController@delete_billing_statement');
     Route::post('submit_payment', 'App\Http\Controllers\BillingController@submit_payment');
+    
+    
     
 });
