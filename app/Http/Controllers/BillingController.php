@@ -105,6 +105,10 @@ class BillingController extends Controller
     {
         $del = BillingStatement::find($id)->delete();
 
+        $update = BillingPayment::where('billing_statement_id', $id)->update([
+            'is_deleted' => true
+        ]);
+
         return response()->json(200);
     }
 }

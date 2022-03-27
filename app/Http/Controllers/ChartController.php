@@ -12,6 +12,7 @@ class ChartController extends Controller
     {
         $get = DB::table("billing_payments")->select(DB::raw('sum(amount) as `amount`'), DB::raw('YEAR(payment_date) year, MONTH(payment_date) month'))
         ->groupby('year','month')
+        ->where('is_deleted', false)
         ->get();
 
         return response()->json($get);
