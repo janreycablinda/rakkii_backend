@@ -84,4 +84,9 @@ class JobOrder extends Model
     {
         return $this->hasMany(\App\Models\BillingStatement::class, 'job_order_id', 'id');
     }
+
+    public function agent()
+    {
+        return $this->hasOne(\App\Models\Agent::class, 'id', 'agent_id');
+    }
 }

@@ -224,6 +224,8 @@ Route::group([
     Route::get('cash_collectables_report/{period}', 'App\Http\Controllers\ReportController@cash_collectables_report');
     Route::get('cash_collectables_report/{period}/{from}/{to}', 'App\Http\Controllers\ReportController@cash_collectables_period_report');
 
+    Route::post('generate_report', 'App\Http\Controllers\ReportController@generate_report');
+
     Route::post('create_billing', 'App\Http\Controllers\BillingController@create_billing');
     Route::get('find_billings/{id}', 'App\Http\Controllers\BillingController@find_billings');
     Route::get('get_billing_statement_no', 'App\Http\Controllers\BillingController@get_billing_statement_no');
